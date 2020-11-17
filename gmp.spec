@@ -1,11 +1,11 @@
 Name:           gmp
-Version:        6.1.2
+Version:        6.2.1
 Release:        42
 License:        LGPL-3.0 GPL-3.0
 Summary:        GNU multiprecision arithmetic library
 Url:            http://gmplib.org/
 Group:          devel
-Source0:        https://mirrors.kernel.org/gnu/gmp/gmp-6.1.2.tar.xz
+Source0:        https://mirrors.kernel.org/gnu/gmp/gmp-6.2.1.tar.xz
 BuildRequires:  grep bison flex readline-dev  ncurses-dev zlib-dev32 readline-dev32
 BuildRequires:  libstdc++-dev
 BuildRequires:  gcc-dev32
@@ -140,6 +140,9 @@ sed -i '/#define GMP_LIMB_BITS/s/64/(__SIZEOF_LONG__ * __CHAR_BIT__)/' %{?buildr
 %{_includedir}/gmpxx.h
 %{_libdir}/libgmp.so
 %{_libdir}/libgmpxx.so
+/usr/lib64/pkgconfig/gmp.pc
+/usr/lib64/pkgconfig/gmpxx.pc
+
 
 %files doc
 %{_infodir}/gmp.info
@@ -153,13 +156,15 @@ sed -i '/#define GMP_LIMB_BITS/s/64/(__SIZEOF_LONG__ * __CHAR_BIT__)/' %{?buildr
 
 %files lib32
 /usr/lib32/libgmp.so.10
-/usr/lib32/libgmp.so.10.3.2
+/usr/lib32/libgmp.so.10.*
 /usr/lib32/libgmpxx.so.4
-/usr/lib32/libgmpxx.so.4.5.2
+/usr/lib32/libgmpxx.so.4.*
 
 %files dev32
 /usr/lib32/libgmpxx.so
 /usr/lib32/libgmp.so
+/usr/lib32/pkgconfig/gmp.pc
+/usr/lib32/pkgconfig/gmpxx.pc
 
 
 %files lib-hsw
