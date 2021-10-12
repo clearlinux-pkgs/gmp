@@ -60,8 +60,8 @@ GNU multiprecision arithmetic library.
 License:        LGPL-3.0 and GPL-3.0
 Summary:        GNU multiprecision arithmetic library
 Group:          devel
-Provides:	lib-hsw
-Obsoletes:	lib-hsw <= 6.2.1
+Provides:	gmp-lib-hsw
+Obsoletes:	gmp-lib-hsw <= 6.2.1
 
 %description lib
 GNU multiprecision arithmetic library.
