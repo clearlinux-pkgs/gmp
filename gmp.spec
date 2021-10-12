@@ -60,17 +60,10 @@ GNU multiprecision arithmetic library.
 License:        LGPL-3.0 and GPL-3.0
 Summary:        GNU multiprecision arithmetic library
 Group:          devel
+Provides:	lib-hsw
+Obsoletes:	lib-hsw <= 6.2.1
 
 %description lib
-GNU multiprecision arithmetic library.
-
-%package lib-hsw
-License:        LGPL-3.0 and GPL-3.0
-Summary:        GNU multiprecision arithmetic library
-Group:          devel
-Requires:	gmp-lib
-
-%description lib-hsw
 GNU multiprecision arithmetic library.
 
 %package lib32
@@ -86,6 +79,7 @@ GNU multiprecision arithmetic library.
 pushd ..
 cp -a gmp-%{version} build32
 cp -a gmp-%{version} buildhsw
+cp -a gmp-%{version} buildskx
 popd
 
 %build
@@ -101,10 +95,10 @@ make %{?_smp_mflags}
 make check ||:
 
 pushd ../buildhsw
-export CFLAGS="-O3  -g -fno-semantic-interposition -march=haswell -ffat-lto-objects  -flto=4 "
+export CFLAGS="-O3  -g -fno-semantic-interposition -march=haswell -ffat-lto-objects  -flto=4 -mno-vzeroupper -march=x86-64-v3 "
 export CXXFLAGS="$CFLAGS"
 
-./configure --host=coreihwl-unknown-linux-gnu --build=coreihwl-linux-gnu --prefix=/usr --exec-prefix=/usr --bindir=/usr/bin --sbindir=/usr/bin --sysconfdir=/etc --datadir=/usr/share --includedir=/usr/include --libdir=/usr/lib64/haswell --libexecdir=/usr/libexec --localstatedir=/var --sharedstatedir=/usr/share --mandir=/usr/share/man --infodir=/usr/share/info --enable-cxx=detect --disable-static --enable-shared
+./configure --host=coreihwl-unknown-linux-gnu --build=coreihwl-linux-gnu --prefix=/usr --exec-prefix=/usr --bindir=/usr/bin --sbindir=/usr/bin --sysconfdir=/etc --datadir=/usr/share --includedir=/usr/include --libdir=/usr/lib64 --libexecdir=/usr/libexec --localstatedir=/var --sharedstatedir=/usr/share --mandir=/usr/share/man --infodir=/usr/share/info --enable-cxx=detect --disable-static --enable-shared
 make %{?_smp_mflags}
 popd
 pushd ../build32
@@ -122,9 +116,11 @@ pushd ../build32
 %make_install32
 popd
 pushd ../buildhsw
-%make_install
+%make_install_v3
 popd
 %make_install
+
+/usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot}/usr/share/clear/optimized-elf/ %{buildroot}/usr/share/clear/filemap/filemap-%{name}
 
 # Fix hardcoded size of mp_limb_t (long) with GCC predefined macros
 sed -i '/#define GMP_LIMB_BITS/s/64/(__SIZEOF_LONG__ * __CHAR_BIT__)/' %{?buildroot}/usr/include/gmp.h
@@ -152,7 +148,8 @@ sed -i '/#define GMP_LIMB_BITS/s/64/(__SIZEOF_LONG__ * __CHAR_BIT__)/' %{?buildr
 %files lib
 %{_libdir}/libgmp.so.10
 %{_libdir}/libgmp.so.10.*
-
+/usr/share/clear/filemap/filemap-gmp
+/usr/share/clear/optimized-elf/lib*
 
 %files lib32
 /usr/lib32/libgmp.so.10
@@ -167,7 +164,3 @@ sed -i '/#define GMP_LIMB_BITS/s/64/(__SIZEOF_LONG__ * __CHAR_BIT__)/' %{?buildr
 /usr/lib32/pkgconfig/gmpxx.pc
 
 
-%files lib-hsw
-%exclude /usr/lib64/haswell/libgmp.so
-/usr/lib64/haswell/libgmp.so.10
-/usr/lib64/haswell/libgmp.so.10.*
