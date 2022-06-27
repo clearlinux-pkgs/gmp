@@ -1,6 +1,6 @@
 Name:           gmp
 Version:        6.2.1
-Release:        44
+Release:        45
 License:        LGPL-3.0 GPL-3.0
 Summary:        GNU multiprecision arithmetic library
 Url:            http://gmplib.org/
@@ -119,7 +119,7 @@ pushd ../buildhsw
 popd
 %make_install
 
-/usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot}/usr/share/clear/optimized-elf/ %{buildroot}/usr/share/clear/filemap/filemap-%{name}
+/usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot} %{buildroot}/usr/share/clear/filemap/filemap-%{name}
 
 # Fix hardcoded size of mp_limb_t (long) with GCC predefined macros
 sed -i '/#define GMP_LIMB_BITS/s/64/(__SIZEOF_LONG__ * __CHAR_BIT__)/' %{?buildroot}/usr/include/gmp.h
@@ -132,17 +132,20 @@ make %{?_smp_mflags} check || :
 %files
 
 %files gmpxx
+/usr/lib64/glibc-hwcaps/x86-64-v3/libgmpxx.so.4
+/usr/lib64/glibc-hwcaps/x86-64-v3/libgmpxx.so.4.*
 /usr/lib64/libgmpxx.so.4
 /usr/lib64/libgmpxx.so.4.*
 
 %files dev
 /usr/include/gmp.h
 /usr/include/gmpxx.h
+/usr/lib64/glibc-hwcaps/x86-64-v3/libgmp.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libgmpxx.so
 /usr/lib64/libgmp.so
 /usr/lib64/libgmpxx.so
 /usr/lib64/pkgconfig/gmp.pc
 /usr/lib64/pkgconfig/gmpxx.pc
-
 
 %files doc
 /usr/share/info/gmp.info
@@ -150,10 +153,10 @@ make %{?_smp_mflags} check || :
 /usr/share/info/gmp.info-1
 
 %files lib
+/usr/lib64/glibc-hwcaps/x86-64-v3/libgmp.so.10
+/usr/lib64/glibc-hwcaps/x86-64-v3/libgmp.so.10.*
 /usr/lib64/libgmp.so.10
 /usr/lib64/libgmp.so.10.*
-/usr/share/clear/filemap/filemap-gmp
-/usr/share/clear/optimized-elf/lib*
 
 %files lib32
 /usr/lib32/libgmp.so.10
