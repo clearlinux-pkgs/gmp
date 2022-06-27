@@ -128,26 +128,26 @@ sed -i '/#define GMP_LIMB_BITS/s/64/(__SIZEOF_LONG__ * __CHAR_BIT__)/' %{?buildr
 %files
 
 %files gmpxx
-%{_libdir}/libgmpxx.so.4
-%{_libdir}/libgmpxx.so.4.*
+/usr/lib64/libgmpxx.so.4
+/usr/lib64/libgmpxx.so.4.*
 
 %files dev
-%{_includedir}/gmp.h
-%{_includedir}/gmpxx.h
-%{_libdir}/libgmp.so
-%{_libdir}/libgmpxx.so
+/usr/include/gmp.h
+/usr/include/gmpxx.h
+/usr/lib64/libgmp.so
+/usr/lib64/libgmpxx.so
 /usr/lib64/pkgconfig/gmp.pc
 /usr/lib64/pkgconfig/gmpxx.pc
 
 
 %files doc
-%{_infodir}/gmp.info
-%{_infodir}/gmp.info-2
-%{_infodir}/gmp.info-1
+/usr/share/info/gmp.info
+/usr/share/info/gmp.info-2
+/usr/share/info/gmp.info-1
 
 %files lib
-%{_libdir}/libgmp.so.10
-%{_libdir}/libgmp.so.10.*
+/usr/lib64/libgmp.so.10
+/usr/lib64/libgmp.so.10.*
 /usr/share/clear/filemap/filemap-gmp
 /usr/share/clear/optimized-elf/lib*
 
