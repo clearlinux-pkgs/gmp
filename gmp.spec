@@ -132,7 +132,6 @@ make %{?_smp_mflags} check || :
 %files
 
 %files gmpxx
-/V3/usr/lib64/libgmpxx.so.4
 /V3/usr/lib64/libgmpxx.so.4.*
 /usr/lib64/libgmpxx.so.4
 /usr/lib64/libgmpxx.so.4.*
@@ -140,8 +139,6 @@ make %{?_smp_mflags} check || :
 %files dev
 /usr/include/gmp.h
 /usr/include/gmpxx.h
-/V3/usr/lib64/libgmp.so
-/V3/usr/lib64/libgmpxx.so
 /usr/lib64/libgmp.so
 /usr/lib64/libgmpxx.so
 /usr/lib64/pkgconfig/gmp.pc
@@ -153,7 +150,6 @@ make %{?_smp_mflags} check || :
 /usr/share/info/gmp.info-1
 
 %files lib
-/V3/usr/lib64/libgmp.so.10
 /V3/usr/lib64/libgmp.so.10.*
 /usr/lib64/libgmp.so.10
 /usr/lib64/libgmp.so.10.*
