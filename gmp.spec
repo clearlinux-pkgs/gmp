@@ -1,6 +1,6 @@
 Name:           gmp
 Version:        6.2.1
-Release:        52
+Release:        53
 License:        LGPL-3.0 GPL-3.0
 Summary:        GNU multiprecision arithmetic library
 Url:            http://gmplib.org/
@@ -12,7 +12,8 @@ BuildRequires:  gcc-dev32
 BuildRequires:  gcc-libgcc32
 BuildRequires:  gcc-libstdc++32
 BuildRequires:  glibc-dev32
-BuildRequires:  glibc-libc32
+BuildRequires:  glibc-libc32 strace
+
 
 
 %description
@@ -86,53 +87,30 @@ popd
 # gmp fails to compile with PIE
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
-export CFLAGS="-O3  -g -fno-semantic-interposition -flto=4"
+export CFLAGS="-O3  -g -fno-semantic-interposition -flto=4 -ffunction-sections"
 export CXXFLAGS="$CFLAGS"
+export LD_ORDERING_SCRIPT_MAP=/usr/share/clear/optimized-link-scripts/clear_ordering_map.ld
 
 ./configure --host=%{_arch}-unknown-linux-gnu --prefix=/usr --exec-prefix=/usr --bindir=/usr/bin --sbindir=/usr/bin --sysconfdir=/etc --datadir=/usr/share --includedir=/usr/include --libdir=/usr/lib64 --libexecdir=/usr/libexec --localstatedir=/var --sharedstatedir=/usr/com --mandir=/usr/share/man --infodir=/usr/share/info --enable-cxx=detect --disable-static --enable-shared
 
-make %{?_smp_mflags}
+strace -f -o /tmp/str make %{?_smp_mflags}
 
-pushd ../buildhsw
-export CFLAGS="-O3  -g -fno-semantic-interposition -march=haswell -ffat-lto-objects  -flto=4 -mno-vzeroupper -march=x86-64-v3 "
-export CXXFLAGS="$CFLAGS"
-
-./configure --host=coreihwl-unknown-linux-gnu --build=coreihwl-linux-gnu --prefix=/usr --exec-prefix=/usr --bindir=/usr/bin --sbindir=/usr/bin --sysconfdir=/etc --datadir=/usr/share --includedir=/usr/include --libdir=/usr/lib64 --libexecdir=/usr/libexec --localstatedir=/var --sharedstatedir=/usr/share --mandir=/usr/share/man --infodir=/usr/share/info --enable-cxx=detect --disable-static --enable-shared
-make %{?_smp_mflags}
-popd
-pushd ../build32
-export CFLAGS="-O3  -g -fno-semantic-interposition -m32 -mstackrealign"
-export CXXFLAGS="$CFLAGS"
-
-./configure --host=i686-unknown-linux-gnu --prefix=/usr --exec-prefix=/usr --bindir=/usr/bin --sbindir=/usr/bin --sysconfdir=/etc --datadir=/usr/share --includedir=/usr/include --libdir=/usr/lib32 --libexecdir=/usr/libexec --localstatedir=/var --sharedstatedir=/usr/share --mandir=/usr/share/man --infodir=/usr/share/info --enable-cxx=detect --disable-static --enable-shared
-make %{?_smp_mflags}
-
-popd
 
 
 %install
-pushd ../build32
-%make_install32
-popd
-pushd ../buildhsw
-%make_install_v3
-popd
-%make_install
+export LD_ORDERING_SCRIPT_MAP=/usr/share/clear/optimized-link-scripts/clear_ordering_map.ld
 
-/usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot} %{buildroot}/usr/share/clear/filemap/filemap-%{name}
+%make_install
 
 # Fix hardcoded size of mp_limb_t (long) with GCC predefined macros
 sed -i '/#define GMP_LIMB_BITS/s/64/(__SIZEOF_LONG__ * __CHAR_BIT__)/' %{?buildroot}/usr/include/gmp.h
 
 
-%check
-make %{?_smp_mflags} check || :
 
 
 %files
 
 %files gmpxx
-/V3/usr/lib64/libgmpxx.so.4.*
 /usr/lib64/libgmpxx.so.4
 /usr/lib64/libgmpxx.so.4.*
 
@@ -150,20 +128,6 @@ make %{?_smp_mflags} check || :
 /usr/share/info/gmp.info-1
 
 %files lib
-/V3/usr/lib64/libgmp.so.10.*
 /usr/lib64/libgmp.so.10
 /usr/lib64/libgmp.so.10.*
-
-%files lib32
-/usr/lib32/libgmp.so.10
-/usr/lib32/libgmp.so.10.*
-/usr/lib32/libgmpxx.so.4
-/usr/lib32/libgmpxx.so.4.*
-
-%files dev32
-/usr/lib32/libgmpxx.so
-/usr/lib32/libgmp.so
-/usr/lib32/pkgconfig/gmp.pc
-/usr/lib32/pkgconfig/gmpxx.pc
-
 
