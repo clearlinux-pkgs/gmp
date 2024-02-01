@@ -1,6 +1,6 @@
 Name:           gmp
 Version:        6.2.1
-Release:        53
+Release:        61
 License:        LGPL-3.0 GPL-3.0
 Summary:        GNU multiprecision arithmetic library
 Url:            http://gmplib.org/
